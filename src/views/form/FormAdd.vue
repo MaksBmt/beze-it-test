@@ -85,8 +85,9 @@
 import AppButton from "@/components/AppButton.vue";
 import AppLabel from "@/components/AppLabel.vue";
 import AppDropdown from "@/components/AppDropdown.vue";
-import AppInput from "../components/AppInput.vue";
-import AppTextarea from "../components/AppTextarea.vue";
+import AppInput from "@/components/AppInput.vue";
+import AppTextarea from "@/components/AppTextarea.vue";
+import { useFormStore } from "@/stores/form";
 import { ref } from "vue";
 
 const isRequiredType = true;
@@ -96,6 +97,8 @@ const nameLabeltextarea = "description";
 const placeholderInput = 'Санаторий "Огонёк"';
 const placeholderTextarea = "Описание";
 const nameLabelFile = "file";
+
+const formStote = useFormStore();
 
 const formData = ref({
   file: null,
@@ -110,6 +113,10 @@ const submitForm = async () => {
   payload.append("file", formData.value.file);
   payload.append("textarea", formData.value.textarea);
   payload.append("option", formData.value.select);
+
+  formData.value.file = URL.createObjectURL(formData.value.file);
+
+  formStote.set(formData.value);
 
   try {
     const response = await fetch("https://your-test-resource.com/submit", {
@@ -127,96 +134,5 @@ const submitForm = async () => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/app.scss";
-
-.form {
-  &__box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  &__title {
-    margin: 0;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 24px;
-    font-family: "Roboto-Bold";
-  }
-
-  &__label {
-    margin-bottom: 5px;
-
-    &--file {
-      cursor: pointer;
-    }
-  }
-
-  &__wrap {
-    margin-bottom: 16px;
-  }
-
-  &__wrap-file {
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px dashed $gray;
-    pointer-events: auto;
-  }
-
-  &__note {
-    margin: 0;
-    font-size: 14px;
-    line-height: 20px;
-    color: $color-secondary;
-    font-family: "Roboto-Regular";
-    text-align: center;
-    margin-bottom: 2px;
-
-    &--strong {
-      font-size: 16px;
-      line-height: 24px;
-      color: $color-primary;
-    }
-  }
-
-  &__button-upload {
-    margin-top: 16px;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-    position: relative;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    padding: 4px 8px;
-    width: 110px;
-
-    font-family: "Roboto-Medium";
-    font-size: 14px;
-    line-height: 20px;
-    text-align: center;
-
-    border-radius: 8px;
-    background-color: rgba(232, 242, 254, 1);
-    color: $color-blue;
-  }
-
-  &__btn {
-    width: 100%;
-    padding: 12px 16px;
-  }
-
-  &__svg {
-    stroke: $color-primary;
-    width: 10px;
-    height: 10px;
-
-    &--btn {
-      stroke: $color-blue;
-    }
-  }
-}
+@import "@/views/form/style/style.scss";
 </style>
